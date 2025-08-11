@@ -11,6 +11,9 @@ It packs your file’s bytes directly into pixels, optionally compresses them, a
 - Preserving files inside an image container format.
 
 FULL 100 PARAGRAPHS OF LOREM IPSUM LOOKS LIKE THIS: (original text and image is in repo)
+Encoded lorem_ipsum.txt (59714 bytes) -> lorem_ipsum_encoded.png (65x64, 4160 pixels)
+Compression: zlib (orig 59714 (~60kb) -> comp 16387 (~16kb) bytes)
+
 
 
 ![lorem_ipsum_100_paragraphs](lorem_ipsum_encoded.png)
