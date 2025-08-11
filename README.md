@@ -11,7 +11,11 @@ It packs your file’s bytes directly into pixels, optionally compresses them, a
 - Preserving files inside an image container format.
 
 FULL 100 PARAGRAPHS OF LOREM IPSUM LOOKS LIKE THIS: (original text and image is in repo)
+
+
 ![lorem_ipsum_100_paragraphs](lorem_ipsum_encoded.png)
+
+
 ---
 
 ## Why YOU should you emberon
