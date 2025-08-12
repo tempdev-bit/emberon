@@ -18,7 +18,7 @@ Encoded lorem_ipsum.txt (90195 bytes) -> lorem_ipsum_encoded2.png (78x78, 6084 p
 Compression: zlib (orig 90195(~90kb) -> comp 24139(~24kb) bytes)
 
 
-<p style="text-align:center;"> ![lorem_ipsum_1000_paragraphs](lorem_ipsum_encoded.png)
+![lorem_ipsum_1000_paragraphs](lorem_ipsum_encoded.png)
 
 
 ---
