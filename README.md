@@ -3,6 +3,8 @@ Emberon, a weird tool I made for converting any file into a .png for some reason
 
 It is a Python tool that lets you hide any binary file inside a PNG image in a fully lossless way — and later recover it perfectly.
 
+TESTED WITH:- .txt, .zip, .png (more will be done later)
+
 It packs your file’s bytes directly into pixels, optionally compresses them, and stores integrity information so decoding is safe.
 
  Great for:
