@@ -10,16 +10,18 @@ import zlib
 from PIL import Image
 
 #---------------Header Stuff------------------#
-MAGIC = b'FNCFSW1'   # 8 bytes magic/version: try to put this code on a ceasar shift decoder ;)
+MAGIC = b'EMBERON1'   # 8 bytes magic/version
 HEADER_FMT = '>8sB B Q Q 32s'  # HEADER YAY: big-endian: magic(8), comp_method(1), reserved(1), orig_size(8), comp_size(8), sha256(32)
 
 # Total header size computed by struct.calcsize
-HEADER_SIZE = struct.calcsize(HEADER_FMT)  # should be 8+1+1+8+8+32 = 58 we'll pad header to 64 bytes to align to 4-bytes nicely
+HEADER_SIZE = struct.calcsize(HEADER_FMT)  # should be 8+1+1+8+8+32 = 58 we'll pad header to HEADER_PAD_TO bytes
 HEADER_PAD_TO = 64
 
-COMP_ZLIB = 1 #Compression used
-COMP_NONE = 0 #COmpression NOT used
+COMP_ZLIB = 1  # Compression used
+COMP_NONE = 0  # Compression NOT used
 
+HEADER_RESERVED_BYTE = 0
+BYTES_PER_PIXEL = 4  # RGBA = 4 bytes per pixel
 
 #--------------Calculate total header size---------------#
 def calc_header(orig_size: int, comp_bytes: bytes, comp_method: int = COMP_ZLIB) -> bytes:
@@ -32,12 +34,12 @@ def calc_header(orig_size: int, comp_bytes: bytes, comp_method: int = COMP_ZLIB)
     header = struct.pack(HEADER_FMT,
                          MAGIC,
                          comp_method,
-                         0,            # reserved for future purposes ^^
+                         HEADER_RESERVED_BYTE,  # reserved for future purposes ^^
                          orig_size,
                          comp_size,
                          digest)
 
-    # pad header to HEADER_PAD_TO bytes; i.e. makes the header exactly 64 bytes
+    # pad header to HEADER_PAD_TO bytes
     if len(header) > HEADER_PAD_TO:
         raise RuntimeError("header unexpectedly too large")
     header += b'\x00' * (HEADER_PAD_TO - len(header))
@@ -69,30 +71,29 @@ def encode_file_to_png(in_path: str, out_path: str, compress_level: int = 6, no_
         comp_method = COMP_NONE
 
     header = calc_header(orig_size, comp_bytes, comp_method=comp_method)
-    payload = header + comp_bytes #'payload' sounds too serious but i'm keeping it
+    payload = header + comp_bytes  # 'payload' sounds too serious but i'm keeping it
 
-    # Pack into RGBA (4 bytes per pixel)
-    # Pad to multiple of 4 bytes
-    pad_len = (-len(payload)) % 4
+    # Pad to multiple of BYTES_PER_PIXEL
+    pad_len = (-len(payload)) % BYTES_PER_PIXEL
     if pad_len:
         payload += b'\x00' * pad_len
 
-    num_pixels = len(payload) // 4
+    num_pixels = len(payload) // BYTES_PER_PIXEL
     width, height = choose_dimensions(num_pixels)
 
     # If width*height pixels > needed, pad trailing bytes
     total_pixels = width * height
     extra_pixels = total_pixels - num_pixels
     if extra_pixels:
-        payload += b'\x00' * (extra_pixels * 4)
+        payload += b'\x00' * (extra_pixels * BYTES_PER_PIXEL)
 
-    assert len(payload) == total_pixels * 4
+    assert len(payload) == total_pixels * BYTES_PER_PIXEL
 
     # Create RGBA image from raw bytes
     img = Image.frombytes('RGBA', (width, height), payload)
 
     # Save as PNG (lossless)
-    img.save(out_path, format='PNG', optimize=False)  # optimize=False to avoid extra computation
+    img.save(out_path, format='PNG', compress_level=0)
     print(f"Encoded {in_path} ({orig_size} bytes) -> {out_path} ({width}x{height}, {total_pixels} pixels).")
     print(f"Compression: {'none' if comp_method==COMP_NONE else 'zlib'} (orig {orig_size} -> comp {len(comp_bytes)} bytes)")
 
@@ -100,16 +101,13 @@ def encode_file_to_png(in_path: str, out_path: str, compress_level: int = 6, no_
 #--------------------------------DECODE!!-----------------------------#
 def decode_png_to_file(in_path: str, out_path: str):
     img = Image.open(in_path)
-    # Ensure we have RGBA bytes
-    img = img.convert('RGBA')
-    raw = img.tobytes()  # bytes length = w*h*4
+    raw = img.tobytes("raw", "RGBA")  # bytes length = w*h*BYTES_PER_PIXEL
 
     # Header is at start
     if len(raw) < HEADER_PAD_TO:
         raise RuntimeError("image too small to contain header")
 
     header_bytes = raw[:HEADER_PAD_TO]
-    # Unpack using same struct (we only read the first struct.calcsize() bytes)
     unpacked = struct.unpack(HEADER_FMT, header_bytes[:struct.calcsize(HEADER_FMT)])
     magic, comp_method, reserved, orig_size, comp_size, digest = unpacked
     if magic != MAGIC:
@@ -138,7 +136,6 @@ def decode_png_to_file(in_path: str, out_path: str):
     else:
         raise RuntimeError(f"unknown compression method {comp_method}")
 
-    # Ts make me feel clever for no reason
     if len(data) != orig_size:
         raise RuntimeError(f"original size mismatch: expected {orig_size} got {len(data)}")
 
