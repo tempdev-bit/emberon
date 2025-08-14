@@ -82,18 +82,18 @@
 
  Piracy.
 
- (Please avoid using this until v3, it's going to finalize th header structure.)
+ (Please avoid using this until v3, it's going to finalize thE header structure.)
 
 ---
 
 ## features?? 🔎
  - **Any file type** — works with text, binaries, archives, executables, etc.
-- **Lossless PNG output** — original data is 100% preserved.
-- **Optional zlib compression** for smaller images.
-- **Built-in integrity check** (SHA-256).
-- **Shows Error if image was changed**
-- **Simple encode/decode commands**.
-- **Near-square image dimensions** for practicality.
+ - **Lossless PNG output** — original data is 100% preserved.
+ - **Optional zlib compression** for smaller images.
+ - **Built-in integrity check** (SHA-256).
+ - **Shows Error if image was changed**
+ - **Simple encode/decode commands**.
+ - **Near-square image dimensions** for practicality.
 
 ---
 
@@ -102,7 +102,7 @@
 - **PNG mode validation** — ensures you only decode supported RGBA PNGs.  
 - **Progress bars** — visible encoding/decoding progress for large files.  
 - **Colored CLI output** — errors, warnings, and success messages are now color-coded.  
-- **Human-readable sizes** — file sizes shown in KB, MB, GB instead of raw bytes.  
+- **Human-readable sizes** — file sizes shown DYNAMICALLY in KB, MB, GB instead of raw bytes.  
 - **Pretty header inspection** — new `inspect` command to view header metadata without decoding.  
 
 ---
@@ -138,7 +138,7 @@ pip install -r req.txt
 ---
 
 ## technical stuff. ⚓️ (W.I.P)
- For the header:
+ For the header in the .png's:
  
  ```
  +-----------------+----------+---------------------------------------------+
