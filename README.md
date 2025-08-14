@@ -58,13 +58,13 @@
  
   For example, this is the header information for encoded.png in the repo:
   ```MD
-  **[Header Information]** <br/>
-   Magic: b'EMBERON1' <br/>
-   Compression: zlib <br/>
-   Original size: 88.08 KB <br/>
-   Compressed size: 23.57 KB <br/>
-   SHA-256: abb5f85061b5860a88f9676aa31577179d4bd268ed9f489e9fac52e63434ab9f <br/>
-   Reserved: 0 <br/>
+  [Header Information]
+   Magic: b'EMBERON1'
+   Compression: zlib
+   Original size: 88.08 KB
+   Compressed size: 23.57 KB
+   SHA-256: abb5f85061b5860a88f9676aa31577179d4bd268ed9f489e9fac52e63434ab9f
+   Reserved: 0
   ```
  
  ### Flags 🫥
