@@ -52,12 +52,12 @@
   See above for the actual command
  
  ### Inspecting 🔮
-  Very important new feture implemented in v2. 
+  *VERY* important new feture implemented in v2. 
  
   It gives: The MAGIC string (used by emberon to identify that the file was made by emberon), the compression method, original size, compressed size and the SHA-256 (along wiht the reserved tag)
  
   For example, this is the header information for encoded.png in the repo:
- 
+  ```MD
   **[Header Information]** <br/>
    Magic: b'EMBERON1' <br/>
    Compression: zlib <br/>
@@ -65,6 +65,7 @@
    Compressed size: 23.57 KB <br/>
    SHA-256: abb5f85061b5860a88f9676aa31577179d4bd268ed9f489e9fac52e63434ab9f <br/>
    Reserved: 0 <br/>
+  ```
  
  ### Flags 🫥
   - -l', '--level' - Sets the zlib compression level (default: 6, range: 0 - 9)
