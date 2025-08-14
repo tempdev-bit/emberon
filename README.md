@@ -1,4 +1,4 @@
-# emberon
+# emberon v2 🦕
  Emberon, a weird tool I made for converting any file into a .png for some reason.
 
 ![logo](logo.jpeg)
@@ -24,7 +24,7 @@
 
 ---
 
-## commands
+## commands 💾
  
  ### Encoding images
  ```
@@ -41,7 +41,7 @@
 
 ---
 
-## usage.
+## usage. 💽
  
  ### Encoding 
   See above for the actual command.
@@ -51,14 +51,14 @@
  
   See above for the actual command
  
- ### Inspecting
+ ### Inspecting 🔮
   Very important new feture implemented in v2. 
  
   It gives: The MAGIC string (used by emberon to identify that the file was made by emberon), the compression method, original size, compressed size and the SHA-256 (along wiht the reserved tag)
  
   For example, this is the header information for encoded.png in the repo:
  
-  *[Header Information]* <br/>
+  **[Header Information]** <br/>
    Magic: b'EMBERON1' <br/>
    Compression: zlib <br/>
    Original size: 88.08 KB <br/>
@@ -66,7 +66,7 @@
    SHA-256: abb5f85061b5860a88f9676aa31577179d4bd268ed9f489e9fac52e63434ab9f <br/>
    Reserved: 0 <br/>
  
- ### Flags
+ ### Flags 🫥
   - -l', '--level' - Sets the zlib compression level (default: 6, range: 0 - 9)
   - --no-compress' - Completely skips zlib compression; stores the EXACT data you give it
  
@@ -74,7 +74,7 @@
  
 ---
 
-## Why YOU should you emberon
+## Why YOU should you emberon 🎁
  For sharing files and stuff with your friends.
 
  If you want to make a large digital archive
@@ -85,7 +85,7 @@
 
 ---
 
-## features??
+## features?? 🔎
  - **Any file type** — works with text, binaries, archives, executables, etc.
 - **Lossless PNG output** — original data is 100% preserved.
 - **Optional zlib compression** for smaller images.
@@ -96,7 +96,7 @@
 
 ---
 
-## What's New in Emberon v2
+## What's New in Emberon v2 🎉
 - **Streaming encode/decode** — handles very large files without loading them fully into RAM.  
 - **PNG mode validation** — ensures you only decode supported RGBA PNGs.  
 - **Progress bars** — visible encoding/decoding progress for large files.  
@@ -106,7 +106,7 @@
 
 ---
 
-## Installation
+## Installation ⛓️‍💥
 
 1. Make sure you have **Python 3.7+** installed.
 2. Install Pillow, Tqdm, Colorama OR use req,txt >>
@@ -116,7 +116,7 @@ pip install -r req.txt
 ```
 ---
 
-## future plans??
+## future plans?? 📡
  piracy.
 
  Notations:
@@ -136,7 +136,7 @@ pip install -r req.txt
 
 ---
 
-## technical stuff. (W.I.P)
+## technical stuff. ⚓️ (W.I.P)
  For the header:
  
  ```
