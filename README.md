@@ -20,7 +20,7 @@
  Compression: zlib (orig 90195(~90kb) -> comp 24139(~24kb) bytes)
  
  
-![lorem_ipsum_1000_paragraphs](lorem_ipsum_encoded.png)
+![lorem_ipsum_1000_paragraphs](encoded.png)
 
 ---
 
