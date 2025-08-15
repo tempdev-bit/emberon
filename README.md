@@ -27,16 +27,16 @@
 ## commands 💾
  ### Simplified commands
   #### Encoding
-    ```py
-     # Encode lorem_ipsum.txt -> lorem_ipsum.txt.png
-     python emberon.py e lorem_ipsum.txt
-    ```
+  ```py
+    # Encode lorem_ipsum.txt -> lorem_ipsum.txt.png
+    python emberon.py e lorem_ipsum.txt
+  ```
 
   #### Decoding
-    ```py
-     # Decode encoded.png -> original name inside header
-     python emberon.py d file.zip.png
-    ```
+  ```py
+   # Decode encoded.png -> original name inside header
+   python emberon.py d file.zip.png
+  ```
 
   #### Inspecting
   ```py
