@@ -25,40 +25,68 @@
 ---
 
 ## commands 💾
+ ### Simplified commands
+  #### Encoding
+    ```py
+    # Encode lorem_ipsum.txt -> lorem_ipsum.txt.png
+    python emberon.py e lorem_ipsum.txt
+    ```
+
+  #### Decoding
+    ```py
+   # Decode encoded.png -> original name inside header
+   python emberon.py d file.zip.png
+    ```
+
+  #### Inspecting
+  ```py
+   # Inspect encoded.py
+   python emberon.py i file.zip.png
+  ```
+ ### Verbose commands
+   #### Encoding images
+   ```py
+   python3 emberon.py encode <filename> <output_png_name>.png
+   ```
+   #### Decoding images
+   ```py
+   python3 emberon.py decode <encoded_file>.png <optional_output_filename>
+   ```
+   #### Inspect (Important)
  
- ### Encoding images
- ```py
- python3 emberon.py encode <filename> <output_png_name>.png
- ```
- ### Decoding images
- v2.5
- ```py
- python3 emberon.py decode <encoded_file>.png <optional_output_filename>
- ```
- ### Inspect (Important)
- ```py
- python3 emberon.py inspect <encoded_file>.png
- ```
+   ```py
+   python3 emberon.py inspect <encoded_file>.png
+  ```
 
 ---
 
 ## usage. 💽
  
  ### Encoding 
-  See above for the actual command.
+  See above for the actual command. </br>
+ 
+  Keywords: encode, e
+ 
+  If no name is provided for output file, it will settle on <filename.extension>.png
  
  ### Decoding
-  You might want to use the 'inspect' command before decoding to ensure that .png is actually a valid .png file (check for b'EMBERONV3' in output)
- 
-  See above for the actual command
- 
+  See above for the actual command </br>
+
+  Keywords: decode, d
+
+  You might want to use the 'inspect' command before decoding to ensure that .png is actually a valid .png file (check for b'EMBERONV3' in output) </br>
+  You can pass a name for output file, which is completely optional. (it defaults the names to the original file which was compressed)
+
  ### Inspecting 🔮
   *VERY* important new feture implemented in v2. 
  
+  Keywords: inspect, i
+
   It gives: The MAGIC string (used by emberon to identify that the file was made by emberon), the compression method, original size, compressed size and the SHA-256 (along with the reserved tag)
  
   For example, this is the header information for encoded.png in the repo:
-  ```MD
+
+  ```py
   [Header Information]
    Magic: b'EMBERON3'
    Compression: zlib

@@ -224,41 +224,49 @@ def main():
     p = argparse.ArgumentParser(description="Encode any file into PNG and decode it back.")
     sp = p.add_subparsers(dest='cmd', required=True)
 
-    enc = sp.add_parser('encode', help='Encode a file to PNG')
-    enc.add_argument('input')
-    enc.add_argument('output')
-    enc.add_argument('-l', '--level', type=int, default=9, help='zlib compression level 0-9')
-    enc.add_argument('--no-compress', action='store_true')
+    # Encode
+    enc = sp.add_parser("encode", aliases=["e"], help="Encode a file to PNG")
+    enc.add_argument("input", help="Input file to encode")
+    enc.add_argument("output", nargs="?", help="Output PNG file (defaults to input.png)")
+    enc.add_argument("-l", "--level", type=int, default=9, help="zlib compression level 0-9")
+    enc.add_argument("--no-compress", action="store_true", help="Disable compression")
 
-    dec = sp.add_parser('decode', help='Decode PNG to original file')
-    dec.add_argument('input')
-    dec.add_argument('output', nargs='?', help='Optional output filename (defaults to original stored name)')
+    # Decode
+    dec = sp.add_parser("decode", aliases=["d"], help="Decode PNG to original file")
+    dec.add_argument("input", help="Input PNG file to decode")
+    dec.add_argument("output", nargs="?", help="Optional output filename (defaults to original stored name)")
 
-    insp = sp.add_parser('inspect', help='Inspect PNG header without decoding')
-    insp.add_argument('input')
+    # Inspect
+    insp = sp.add_parser("inspect", aliases=["i"], help="Inspect PNG header without decoding")
+    insp.add_argument("input", help="PNG file to inspect")
 
     args = p.parse_args()
 
     try:
-        if args.cmd == 'encode':
+        if args.cmd in ("encode", "e"):
             if not os.path.isfile(args.input):
-                raise SystemExit(Fore.RED + "input file not found")
-            encode_file_to_png(args.input, args.output, compress_level=args.level, no_compress=args.no_compress)
-        elif args.cmd == 'decode':
+                raise SystemExit(Fore.RED + "Input file not found")
+            output_file = args.output or (args.input + ".png")
+            encode_file_to_png(args.input, output_file, compress_level=args.level, no_compress=args.no_compress)
+
+        elif args.cmd in ("decode", "d"):
             if not os.path.isfile(args.input):
-                raise SystemExit(Fore.RED + "input file not found")
-            decode_png_to_file(args.input, args.output)
-        elif args.cmd == 'inspect':
+                raise SystemExit(Fore.RED + "Input file not found")
+            decode_png_to_file(args.input, args.output)  # Handles default name from header
+
+        elif args.cmd in ("inspect", "i"):
             if not os.path.isfile(args.input):
-                raise SystemExit(Fore.RED + "input file not found")
+                raise SystemExit(Fore.RED + "Input file not found")
             img = Image.open(args.input)
             if img.mode != 'RGBA':
                 raise SystemExit(Fore.RED + f"Unsupported PNG mode: {img.mode}")
             raw = img.tobytes("raw", "RGBA")
             h = parse_header(raw)
             print_header_info(h)
+
     except Exception as e:
         print(Fore.RED + f"Error: {e}")
+
 
 if __name__ == '__main__':
     main()
