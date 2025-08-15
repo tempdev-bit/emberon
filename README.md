@@ -22,6 +22,55 @@
  
 ![lorem_ipsum_1000_paragraphs](encoded.png)
 
+
+---
+
+## size 💾 
+ Emberon provides three different compression algorithms. (zlib, zstd, lzma)</br>
+ Here's all three compared for lorem_ipsum.txt (150 paargraphs) with MAX compression applied (lossless):
+
+ 1. Zlib: 
+   ✓ Encoded lorem_ipsum.txt -> encoded.png [79x78]
+   Compression: zlib (orig **88.08** KB → comp **23.57** KB)
+
+ 2. Zstd:
+   ✓ Encoded lorem_ipsum.txt -> encoded.png [78x77]
+   Compression: zstd (orig **88.08** KB → comp **23.12** KB)
+
+ 3. Lzma:
+   ✓ Encoded lorem_ipsum.txt -> encoded.png [74x74]
+   Compression: lzma (orig **88.08** KB → comp **21.09** KB)
+
+ These results speak for themselves. </br>
+ Lzma has the lowsert post-compress file size</br>
+ BUT, CURRENTLY zstd is the default while both zlib and lzma anre optional by passing the "--zlib" and "--lzma" tags respectively.</br>
+ I will be deciding the final compression library for v3 in a few days.
+
+--- 
+
+## Why YOU should you emberon 🎁
+ For sharing files and stuff with your friends.
+
+ If you want to make a large digital archive
+
+ Piracy.
+
+ (Please avoid using this until v3, it's going to finalize the header structure.)
+
+---
+
+## features?? 🔎
+ - **Any file type** — works with text, binaries, archives, executables, etc.
+ - **Lossless PNG output** — original data is 100% preserved.
+ - **Optional zlib compression** for smaller images.
+ - **Built-in integrity check** (SHA-256).
+ - **Shows Error if image was changed**
+ - **Simple encode/decode commands**.
+ - **Near-square image dimensions** for practicality.
+ - **Automatic restoration of filename and extension on decoding**
+ - **Colored CLI output** because *pretty*
+ - **Streaming encode/decode** so that it runs on potato's
+
 ---
 
 ## commands 💾
@@ -66,7 +115,7 @@
    ```py
     python3 emberon.py encode <filename> -o <optional_output_png_name>.png
    ```
-   ***No.*** Don' use these please
+   ***No.*** Don't use these please
    #### Decoding images
    ```py
     python3 emberon.py decode <encoded_file>.png -o <optional_output_filename>
@@ -124,50 +173,6 @@
    SHA-256: abb5f85061b5860a88f9676aa31577179d4bd268ed9f489e9fac52e63434ab9f
    Reserved: 0
   ```
----
-
-## size 💾 
- Emberon provides three different compression algorithms. (zlib, zstd, lzma)</br>
- Here's all three compared for lorem_ipsum.txt (150 paargraphs) with MAX compression applied (lossless):
-
- 1. Zlib: 
-   ✓ Encoded lorem_ipsum.txt -> encoded.png [79x78]
-   Compression: zlib (orig **88.08** KB → comp **23.57** KB)
-
- 2. Zstd:
-   ✓ Encoded lorem_ipsum.txt -> encoded.png [78x77]
-   Compression: zstd (orig **88.08** KB → comp **23.12** KB)
-
- 3. Lzma:
-   ✓ Encoded lorem_ipsum.txt -> encoded.png [74x74]
-   Compression: lzma (orig **88.08** KB → comp **21.09** KB)
-
- These results speak for themselves. </br>
- Lzma has the lowsert post-compress file size</br>
- BUT, CURRENTLY zstd is the default while both zlib and lzma anre optional by passing the "--zlib" and "--lzma" tags respectively.</br>
- I will be deciding the final compression library for v3 in a few days.
-
---- 
-
-## Why YOU should you emberon 🎁
- For sharing files and stuff with your friends.
-
- If you want to make a large digital archive
-
- Piracy.
-
- (Please avoid using this until v3, it's going to finalize the header structure.)
-
----
-
-## features?? 🔎
- - **Any file type** — works with text, binaries, archives, executables, etc.
- - **Lossless PNG output** — original data is 100% preserved.
- - **Optional zlib compression** for smaller images.
- - **Built-in integrity check** (SHA-256).
- - **Shows Error if image was changed**
- - **Simple encode/decode commands**.
- - **Near-square image dimensions** for practicality.
 
 ---
 
@@ -196,7 +201,7 @@
 ## Installation ⛓️‍💥
 
 1. Make sure you have **Python 3.7+** installed.
-2. Install Pillow, Tqdm, Colorama OR use req,txt >>
+2. Install Pillow, Tqdm, Colorama, Zstandard OR use req,txt >>
 
 ```bash
 pip install -r req.txt
@@ -211,8 +216,6 @@ pip install -r req.txt
   - (?) - maybe
   - (*) - planned, but later
 
- - Better errors & hints (!)
- - Alternate compression algorithms (!)
  - Configurable aspect ratio (?)
  - Parallel chunk compression (*)
  - Encryption with AES-256 (*)
@@ -226,23 +229,28 @@ pip install -r req.txt
  For the header in the .png's:
  
  ```
-+-----------------+----------+------------------------------------------------------+
-| Field           | Size     | Description                                          |
-+-----------------+----------+------------------------------------------------------+
-| MAGIC           | 8 bytes  | Identifier + version (b'EMBERON3')                   |
-| comp_method     | 1 byte   | Compression type (0=none, 1=zlib)                    |
-| reserved        | 1 byte   | Reserved for future features                         |
-| orig_size       | 8 bytes  | Original uncompressed file size (bytes)              |
-| comp_size       | 8 bytes  | Compressed data size (bytes)                         |
-| name_len        | 2 bytes  | Length of original filename (no extension) in bytes  |
-| ext_len         | 2 bytes  | Length of original file extension (no dot) in bytes  |
-| filename        | var.     | UTF-8 encoded original filename                      |
-| extension       | var.     | UTF-8 encoded file extension                         |
-| sha256_digest   | 32 bytes | SHA-256 hash of orig_size followed by data bytes     |
-| padding         | var.     | Zero padding to reach 256 bytes total header size    |
-+-----------------+----------+------------------------------------------------------+
-TOTAL: 256 bytes (including padding)
-```
+# Emberon PNG Header Structure (v2.6)
+
+| Field             | Size       | Description |
+|-------------------|------------|-------------|
+| **MAGIC**         | 8 bytes    | File signature + version (always `b'EMBERON3'`) |
+| **comp_method**   | 1 byte     | Compression type:<br>• `0` = None<br>• `1` = zlib<br>• `2` = Zstandard (if available)<br>• `3` = LZMA |
+| **reserved**      | 1 byte     | Reserved for future use (always `0` in v2.6) |
+| **orig_size**     | 8 bytes    | Original, uncompressed file size in bytes |
+| **comp_size**     | 8 bytes    | Compressed data size in bytes |
+| **name_len**      | 2 bytes    | Length (in bytes) of original filename (UTF-8, no extension) |
+| **ext_len**       | 2 bytes    | Length (in bytes) of original file extension (UTF-8, no dot) |
+| **filename**      | variable   | UTF-8 encoded original filename (no extension) |
+| **extension**     | variable   | UTF-8 encoded file extension (no dot) |
+| **sha256_digest** | 32 bytes   | SHA-256 of: ASCII string `"{orig_size}:"` + compressed data bytes |
+| **padding**       | variable   | Zero (`0x00`) padding to align total header size to **256 bytes** |
+
+**Notes:**
+- `HEADER_PREFIX_FMT` = `>8sBBQQHH` (big-endian).
+- `HEADER_PAD_TO` = `256` bytes (total fixed header size, including padding).
+- Maximum filename length: **175 bytes**; maximum extension length: **20 bytes**.
+- The compressed payload begins immediately after the 256-byte header.
+
 
 
 <sup> Made with ❤️ by solar. <sup>
