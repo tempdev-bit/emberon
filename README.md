@@ -44,43 +44,47 @@
    python emberon.py i file.zip.png
   ```
   #### Output name
-  uses the ``` -o ``` tag. </br>
+  Uses the ``` -o ``` tag for setting file names for encoding and decoding </br>
   for example:</br>
 
-  encoding ->
+  Encoding ->
 
   ```py
-   python emberon.py e lorem_ipsum.txt -o encoded.txt
+   #Encode lorem_ipsum.txt into a .png with name encoded.png
+   python emberon.py e lorem_ipsum.txt -o encoded.png
   ```
 
-  decoding ->
+  Decoding ->
   ```py
-   python emberon.py d file.zip.png
+   #Decode encoded .png into a .txt with name lorem_ipsum_text.txt
+   python emberon.py d encoded.png -o lorem_ipsum_text.txt
   ```
   
  ### Verbose commands
    #### Encoding images
+   Is this good yet??
    ```py
-    python3 emberon.py encode <filename> <output_png_name>.png
+    python3 emberon.py encode <filename> -o <optional_output_png_name>.png
    ```
+   ***No.*** Don' use these please
    #### Decoding images
    ```py
-    python3 emberon.py decode <encoded_file>.png <optional_output_filename>
+    python3 emberon.py decode <encoded_file>.png -o <optional_output_filename>
    ```
    #### Inspect (Important)
- 
+   Isn't as bad as i thought it would be
    ```py
     python3 emberon.py inspect <encoded_file>.png
   ```
   ### flags.
    #### -l or --level
-   used to set the level for compression algorithm (scale 0-9) (default:9)</br>
-   the larger the level, the more time it will take, although still even at level 9, large files don't take much time.</br>
+   Used to set the level for compression algorithm (scale 0-9) (default:9)</br>
+   The larger the level, the more time it will take, although still even at level 9, large files don't take much time.</br>
    USE LEVEL 9 FOR OPTIMIZATION'S SAKE
 
    #### --no-compress
    avoids compression entirely (why would you want to use this tbh)
-  (note: setting --level 0 is practically the same as --no-compress, zlib doesn't compress data at level 0 BUT the zlib header/structure will be around the data.)
+   (note: setting --level 0 is practically the same as --no-compress, zlib doesn't compress data at level 0 BUT the zlib header/structure will be around the data.)
  
 ---
 
