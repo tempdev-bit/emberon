@@ -41,9 +41,8 @@
    ✓ Encoded lorem_ipsum.txt -> encoded.png [74x74]
    Compression: lzma (orig **88.08** KB → comp **21.09** KB)
 
- These results speak for themselves. </br>
- Lzma has the lowsert post-compress file size</br>
- BUT, CURRENTLY zstd is the default while both zlib and lzma anre optional by passing the "--zlib" and "--lzma" tags respectively.</br>
+ These results speak for themselves, Lzma has the lowest post-compress file size</br>
+ BUT, CURRENTLY zstd is the default while both zlib and lzma anre optional by passing the "--zlib" and "--lzma" tags respectively.
  I will be deciding the final compression library for v3 in a few days.
 
 --- 
