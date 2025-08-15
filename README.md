@@ -1,11 +1,11 @@
-# emberon v2 🦕
- Emberon, a weird tool I made for converting any file into a .png for some reason.
+# emberon v2.5 🦕
+ Emberon, a weird tool I made for converting **ANY** file into a .png for some reason.
 
 ![logo](logo.jpeg)
 
- It is a Python tool that lets you hide any binary file inside a PNG image in a fully lossless way — and later recover it perfectly.
+ It is a Python tool that lets you turn any binary file inside a PNG image in a fully lossless way — and later recover it perfectly.
  
- TESTED WITH:- .txt, .zip (more will be done later)
+ TESTED WITH:- .txt, .zip, .AppImage (more will be done later)
  
  It packs your file’s bytes directly into pixels, optionally compresses them, and stores integrity information so decoding is safe.
  
@@ -27,16 +27,17 @@
 ## commands 💾
  
  ### Encoding images
- ```
+ ```py
  python3 emberon.py encode <filename> <output_png_name>.png
  ```
  ### Decoding images
- ```
- python3 emberon.py <encoded_file>.png <output_name>.extension_name
+ v2.5
+ ```py
+ python3 emberon.py decode <encoded_file>.png <optional_output_filename>
  ```
  ### Inspect (Important)
- ```
- python3 inspect <encoded_file>.png
+ ```py
+ python3 emberon.py inspect <encoded_file>.png
  ```
 
 ---
@@ -47,22 +48,23 @@
   See above for the actual command.
  
  ### Decoding
-  You might want to use the 'inspect' command before decoding to ensure that .png is actually a valid .png file (check for b'EMBERONV2' in output)
+  You might want to use the 'inspect' command before decoding to ensure that .png is actually a valid .png file (check for b'EMBERONV3' in output)
  
   See above for the actual command
  
  ### Inspecting 🔮
   *VERY* important new feture implemented in v2. 
  
-  It gives: The MAGIC string (used by emberon to identify that the file was made by emberon), the compression method, original size, compressed size and the SHA-256 (along wiht the reserved tag)
+  It gives: The MAGIC string (used by emberon to identify that the file was made by emberon), the compression method, original size, compressed size and the SHA-256 (along with the reserved tag)
  
   For example, this is the header information for encoded.png in the repo:
   ```MD
   [Header Information]
-   Magic: b'EMBERON1'
+   Magic: b'EMBERON3'
    Compression: zlib
    Original size: 88.08 KB
    Compressed size: 23.57 KB
+   Original filename: lorem_ipsum.txt
    SHA-256: abb5f85061b5860a88f9676aa31577179d4bd268ed9f489e9fac52e63434ab9f
    Reserved: 0
   ```
@@ -82,7 +84,7 @@
 
  Piracy.
 
- (Please avoid using this until v3, it's going to finalize thE header structure.)
+ (Please avoid using this until v3, it's going to finalize the header structure.)
 
 ---
 
@@ -94,6 +96,18 @@
  - **Shows Error if image was changed**
  - **Simple encode/decode commands**.
  - **Near-square image dimensions** for practicality.
+
+---
+
+## What's New in Emberon v2.5 ✨ (W.I.P)
+ - **Original filename & extension storage**(Max length: 175; practical limit: 194) — headers now store original file name and extension for automatic restoration on decode.
+ - *(Note on above point: name_len and ext_len are stored in 2-byte unsigned shorts (max 65535),but practical limit is 190 bytes for filename if extension is ~4 bytes, due to 256-byte header.)*
+ - **Automatic output naming** — if no output filename is specified during decoding, Emberon uses the stored original name + extension.
+ - **Expanded header format** — header size increased to 256 bytes to accommodate filename metadata safely.
+ - **Updated magic signature** — changed from EMBERON2 → EMBERON3 to avoid accidental decoding of older v2  files.
+ - **Unified header parser** — new parser function simplifies inspect and decode commands.
+ - **Inspect mode enhancements** — view original filename, extension, and other metadata without decoding.
+ - **Safety checks for filename lengths** — prevents oversized metadata from breaking PNG encoding.
 
 ---
 
@@ -127,8 +141,7 @@ pip install -r req.txt
 
  - Better errors & hints (!)
  - Alternate compression algorithms (!)
- - Configurable aspect ratio (!)
- - Automatic filename and extension (stored in header) (!)
+ - Configurable aspect ratio (?)
  - Parallel chunk compression (*)
  - Encryption with AES-256 (*)
  - Checksum redundancy (*)
@@ -141,17 +154,22 @@ pip install -r req.txt
  For the header in the .png's:
  
  ```
- +-----------------+----------+---------------------------------------------+
- | Field           | Size     | Description                                 |
- +-----------------+----------+---------------------------------------------+
- | MAGIC           | 8 bytes  | Identifier + version (b'EMBERON1')          |
- | comp_method     | 1 byte   | Compression type (0=none, 1=zlib)           |
- | reserved        | 1 byte   | Reserved for future features                |
- | orig_size       | 8 bytes  | Original uncompressed file size (bytes)     |
- | comp_size       | 8 bytes  | Compressed data size (bytes)                |
- | sha256_digest   | 32 bytes | SHA-256 hash of "orig_size:data"            |
- +-----------------+----------+---------------------------------------------+
- TOTAL: 58 bytes (padded to 64 bytes in file)
++-----------------+----------+------------------------------------------------------+
+| Field           | Size     | Description                                          |
++-----------------+----------+------------------------------------------------------+
+| MAGIC           | 8 bytes  | Identifier + version (b'EMBERON3')                   |
+| comp_method     | 1 byte   | Compression type (0=none, 1=zlib)                    |
+| reserved        | 1 byte   | Reserved for future features                         |
+| orig_size       | 8 bytes  | Original uncompressed file size (bytes)              |
+| comp_size       | 8 bytes  | Compressed data size (bytes)                         |
+| name_len        | 2 bytes  | Length of original filename (no extension) in bytes  |
+| ext_len         | 2 bytes  | Length of original file extension (no dot) in bytes  |
+| filename        | var.     | UTF-8 encoded original filename                      |
+| extension       | var.     | UTF-8 encoded file extension                         |
+| sha256_digest   | 32 bytes | SHA-256 hash of orig_size followed by data bytes     |
+| padding         | var.     | Zero padding to reach 256 bytes total header size    |
++-----------------+----------+------------------------------------------------------+
+TOTAL: 256 bytes (including padding)
 ```
 
 
