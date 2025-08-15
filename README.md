@@ -48,13 +48,13 @@
 --- 
 
 ## Why YOU should you emberon 🎁
- For sharing files and stuff with your friends.
+ 1. For sharing files and stuff with your friends.
 
- If you want to make a large digital archive
+ 2. If you want to make a large digital archive
 
- Piracy.
+ 3. Piracy.
 
- (Please avoid using this until v3, it's going to finalize the header structure.)
+ ~~(Please avoid using this until v3, it's going to finalize the header structure.)~~ v2.5 has MAINLY finalized the header structure
 
 ---
 
