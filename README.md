@@ -43,6 +43,18 @@
    # Inspect encoded.py
    python emberon.py i file.zip.png
   ```
+  #### Output name
+  uses the ``` -o ``` tag. </br>
+  for example:</br>
+  encoding ->
+  ```py
+   python emberon.py e lorem_ipsum.txt -o encoded.txt
+  ```
+  decoding ->
+  ```py
+  python emberon.py d file.zip.png
+  ```
+  
  ### Verbose commands
    #### Encoding images
    ```py
@@ -57,8 +69,38 @@
    ```py
    python3 emberon.py inspect <encoded_file>.png
   ```
+  ### flags.
+   #### -l or --level
+   used to set the level for compression algorithm (scale 0-9) (default:9)</br>
+   the larger the level, the more time it will take, although still even at level 9, large files don't take much time.</br>
+   USE LEVEL 9 FOR OPTIMIZATION'S SAKE
 
+   #### --no-compress
+   avoids compression entirely (why would you want to use this tbh)
+  (note: setting --level 0 is practically the same as --no-compress, zlib doesn't compress data at level 0 BUT the zlib header/structure will be around the data.)
+ 
 ---
+
+## size 💾 
+ Emberon provides three different compression algorithms. (zlib, zstd, lzma)</br>
+ Here's all three compared for lorem_ipsum.txt (150 paargraphs) with MAX compression applied (lossless):
+
+ 1. Zlib: 
+   ✓ Encoded lorem_ipsum.txt -> encoded.png [79x78]
+   Compression: zlib (orig **88.08** KB → comp **23.57** KB)
+
+ 2. Zstd:
+   ✓ Encoded lorem_ipsum.txt -> encoded.png [78x77]
+   Compression: zstd (orig **88.08** KB → comp **23.12** KB)
+
+ 3. Lzma:
+   ✓ Encoded lorem_ipsum.txt -> encoded.png [74x74]
+   Compression: lzma (orig **88.08** KB → comp **21.09** KB)
+
+ These results speak for themselves. </br>
+ Lzma has the lowsert post-compress file size</br>
+ BUT, CURRENTLY zstd is the default while both zlib and lzma anre optional by passing the "--zlib" and "--lzma" tags respectively.</br>
+ I will be deciding the final compression library for v3 in a few days.
 
 ## usage. 💽
  
@@ -96,13 +138,6 @@
    SHA-256: abb5f85061b5860a88f9676aa31577179d4bd268ed9f489e9fac52e63434ab9f
    Reserved: 0
   ```
- 
- ### Flags 🫥
-  - -l', '--level' - Sets the zlib compression level (default: 6, range: 0 - 9)
-  - --no-compress' - Completely skips zlib compression; stores the EXACT data you give it
- 
-  (note: setting --level 0 is practically the same as --no-compress, zlib doesn't compress data at level 0 BUT the zlib header/structure will be around the data.)
- 
 ---
 
 ## Why YOU should you emberon 🎁
