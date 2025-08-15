@@ -234,7 +234,7 @@ pip install -r req.txt
  |-------------------|------------|-------------|
  | **MAGIC**         | 8 bytes    | File signature + version (always `b'EMBERON3'`) |
  | **comp_method**   | 1 byte     | Compression type:<br>• `0` = None<br>• `1` = zlib<br>• `2` = Zstandard (if available)<br>• `3` = LZMA |
- | **reserved**      | 1 byte     | Reserved for future use (always `0` in v2.6) |
+ | **reserved**      | 1 byte     | Reserved for future use (always `0`) |
  | **orig_size**     | 8 bytes    | Original, uncompressed file size in bytes |
  | **comp_size**     | 8 bytes    | Compressed data size in bytes |
  | **name_len**      | 2 bytes    | Length (in bytes) of original filename (UTF-8, no extension) |
