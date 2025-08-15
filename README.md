@@ -83,13 +83,13 @@
   #### Decoding
   ```py
    # Decode encoded.png -> original name inside header
-   python emberon.py d file.zip.png
+   python emberon.py d encoded.png
   ```
 
   #### Inspecting
   ```py
-   # Inspect encoded.py
-   python emberon.py i file.zip.png
+   # Inspect encoded.png
+   python emberon.py i encoded.png
   ```
   #### Output name
   Uses the ``` -o ``` tag for setting file names for encoding and decoding </br>
@@ -124,7 +124,7 @@
    ```py
     python3 emberon.py inspect <encoded_file>.png
   ```
-  ### flags.
+  ### flags. 🫥
    #### -l or --level
    Used to set the level for compression algorithm (scale 0-9) (default:9)</br>
    The larger the level, the more time it will take, although still even at level 9, large files don't take much time.</br>
