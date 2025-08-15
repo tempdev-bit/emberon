@@ -34,8 +34,8 @@
 
   #### Decoding
     ```py
-    # Decode encoded.png -> original name inside header
-    python emberon.py d file.zip.png
+     # Decode encoded.png -> original name inside header
+     python emberon.py d file.zip.png
     ```
 
   #### Inspecting
