@@ -28,14 +28,14 @@
  ### Simplified commands
   #### Encoding
     ```py
-    # Encode lorem_ipsum.txt -> lorem_ipsum.txt.png
-    python emberon.py e lorem_ipsum.txt
+     # Encode lorem_ipsum.txt -> lorem_ipsum.txt.png
+     python emberon.py e lorem_ipsum.txt
     ```
 
   #### Decoding
     ```py
-   # Decode encoded.png -> original name inside header
-   python emberon.py d file.zip.png
+    # Decode encoded.png -> original name inside header
+    python emberon.py d file.zip.png
     ```
 
   #### Inspecting
@@ -46,28 +46,31 @@
   #### Output name
   uses the ``` -o ``` tag. </br>
   for example:</br>
+
   encoding ->
+
   ```py
    python emberon.py e lorem_ipsum.txt -o encoded.txt
   ```
+
   decoding ->
   ```py
-  python emberon.py d file.zip.png
+   python emberon.py d file.zip.png
   ```
   
  ### Verbose commands
    #### Encoding images
    ```py
-   python3 emberon.py encode <filename> <output_png_name>.png
+    python3 emberon.py encode <filename> <output_png_name>.png
    ```
    #### Decoding images
    ```py
-   python3 emberon.py decode <encoded_file>.png <optional_output_filename>
+    python3 emberon.py decode <encoded_file>.png <optional_output_filename>
    ```
    #### Inspect (Important)
  
    ```py
-   python3 emberon.py inspect <encoded_file>.png
+    python3 emberon.py inspect <encoded_file>.png
   ```
   ### flags.
    #### -l or --level
@@ -80,27 +83,6 @@
   (note: setting --level 0 is practically the same as --no-compress, zlib doesn't compress data at level 0 BUT the zlib header/structure will be around the data.)
  
 ---
-
-## size 💾 
- Emberon provides three different compression algorithms. (zlib, zstd, lzma)</br>
- Here's all three compared for lorem_ipsum.txt (150 paargraphs) with MAX compression applied (lossless):
-
- 1. Zlib: 
-   ✓ Encoded lorem_ipsum.txt -> encoded.png [79x78]
-   Compression: zlib (orig **88.08** KB → comp **23.57** KB)
-
- 2. Zstd:
-   ✓ Encoded lorem_ipsum.txt -> encoded.png [78x77]
-   Compression: zstd (orig **88.08** KB → comp **23.12** KB)
-
- 3. Lzma:
-   ✓ Encoded lorem_ipsum.txt -> encoded.png [74x74]
-   Compression: lzma (orig **88.08** KB → comp **21.09** KB)
-
- These results speak for themselves. </br>
- Lzma has the lowsert post-compress file size</br>
- BUT, CURRENTLY zstd is the default while both zlib and lzma anre optional by passing the "--zlib" and "--lzma" tags respectively.</br>
- I will be deciding the final compression library for v3 in a few days.
 
 ## usage. 💽
  
@@ -139,6 +121,29 @@
    Reserved: 0
   ```
 ---
+
+## size 💾 
+ Emberon provides three different compression algorithms. (zlib, zstd, lzma)</br>
+ Here's all three compared for lorem_ipsum.txt (150 paargraphs) with MAX compression applied (lossless):
+
+ 1. Zlib: 
+   ✓ Encoded lorem_ipsum.txt -> encoded.png [79x78]
+   Compression: zlib (orig **88.08** KB → comp **23.57** KB)
+
+ 2. Zstd:
+   ✓ Encoded lorem_ipsum.txt -> encoded.png [78x77]
+   Compression: zstd (orig **88.08** KB → comp **23.12** KB)
+
+ 3. Lzma:
+   ✓ Encoded lorem_ipsum.txt -> encoded.png [74x74]
+   Compression: lzma (orig **88.08** KB → comp **21.09** KB)
+
+ These results speak for themselves. </br>
+ Lzma has the lowsert post-compress file size</br>
+ BUT, CURRENTLY zstd is the default while both zlib and lzma anre optional by passing the "--zlib" and "--lzma" tags respectively.</br>
+ I will be deciding the final compression library for v3 in a few days.
+
+--- 
 
 ## Why YOU should you emberon 🎁
  For sharing files and stuff with your friends.
