@@ -228,28 +228,27 @@ pip install -r req.txt
 ## technical stuff. ⚓️ (W.I.P)
  For the header in the .png's:
  
- ```
-# Emberon PNG Header Structure (v2.6)
-
-| Field             | Size       | Description |
-|-------------------|------------|-------------|
-| **MAGIC**         | 8 bytes    | File signature + version (always `b'EMBERON3'`) |
-| **comp_method**   | 1 byte     | Compression type:<br>• `0` = None<br>• `1` = zlib<br>• `2` = Zstandard (if available)<br>• `3` = LZMA |
-| **reserved**      | 1 byte     | Reserved for future use (always `0` in v2.6) |
-| **orig_size**     | 8 bytes    | Original, uncompressed file size in bytes |
-| **comp_size**     | 8 bytes    | Compressed data size in bytes |
-| **name_len**      | 2 bytes    | Length (in bytes) of original filename (UTF-8, no extension) |
-| **ext_len**       | 2 bytes    | Length (in bytes) of original file extension (UTF-8, no dot) |
-| **filename**      | variable   | UTF-8 encoded original filename (no extension) |
-| **extension**     | variable   | UTF-8 encoded file extension (no dot) |
-| **sha256_digest** | 32 bytes   | SHA-256 of: ASCII string `"{orig_size}:"` + compressed data bytes |
-| **padding**       | variable   | Zero (`0x00`) padding to align total header size to **256 bytes** |
-
-**Notes:**
-- `HEADER_PREFIX_FMT` = `>8sBBQQHH` (big-endian).
-- `HEADER_PAD_TO` = `256` bytes (total fixed header size, including padding).
-- Maximum filename length: **175 bytes**; maximum extension length: **20 bytes**.
-- The compressed payload begins immediately after the 256-byte header.
+ 
+ 
+ | Field             | Size       | Description |
+ |-------------------|------------|-------------|
+ | **MAGIC**         | 8 bytes    | File signature + version (always `b'EMBERON3'`) |
+ | **comp_method**   | 1 byte     | Compression type:<br>• `0` = None<br>• `1` = zlib<br>• `2` = Zstandard (if available)<br>• `3` = LZMA |
+ | **reserved**      | 1 byte     | Reserved for future use (always `0` in v2.6) |
+ | **orig_size**     | 8 bytes    | Original, uncompressed file size in bytes |
+ | **comp_size**     | 8 bytes    | Compressed data size in bytes |
+ | **name_len**      | 2 bytes    | Length (in bytes) of original filename (UTF-8, no extension) |
+ | **ext_len**       | 2 bytes    | Length (in bytes) of original file extension (UTF-8, no dot) |
+ | **filename**      | variable   | UTF-8 encoded original filename (no extension) |
+ | **extension**     | variable   | UTF-8 encoded file extension (no dot) |
+ | **sha256_digest** | 32 bytes   | SHA-256 of: ASCII string `"{orig_size}:"` + compressed data bytes |
+ | **padding**       | variable   | Zero (`0x00`) padding to align total header size to **256 bytes** |
+ 
+ **Notes:**
+ - `HEADER_PREFIX_FMT` = `>8sBBQQHH` (big-endian).
+ - `HEADER_PAD_TO` = `256` bytes (total fixed header size, including padding).
+ - Maximum filename length: **175 bytes**; maximum extension length: **20 bytes**.
+ - The compressed payload begins immediately after the 256-byte header.
 
 
 

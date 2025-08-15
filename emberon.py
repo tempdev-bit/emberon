@@ -1,4 +1,4 @@
-# emberon.py - v2.6
+# emberon.py - v2.5
 # Encode any file into a lossless PNG image and decode it back.
 # Default compression: Zstandard (zstd), with optional LZMA and zlib.
 # Now stores original filename and extension in header.
