@@ -17,7 +17,7 @@
  FULL 150 PARAGRAPHS OF LOREM IPSUM LOOKS LIKE THIS: (original text and image is in repo)
  
  Encoded lorem_ipsum.txt (90195 bytes) -> lorem_ipsum_encoded2.png (78x78, 6084 pixels).
- Compression: zlib (orig 90195(~90kb) -> comp 24139(~24kb) bytes)
+ Compression: lzma level 9 (orig 90kb -> comp 21kb) bytes)
  
  
 ![lorem_ipsum_1000_paragraphs](encoded.png)
