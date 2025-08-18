@@ -223,6 +223,7 @@ def main():
     enc.add_argument("-o", "--output", help="Output PNG file")
     enc.add_argument("--lzma", action="store_true", help="Use LZMA compression")
     enc.add_argument("--zlib", action="store_true", help="Use zlib compression")
+    enc.add_argument("--zstd", action="store_true", help="Use zstd compression")
     enc.add_argument("--no-compress", action="store_true", help="Disable compression")
     enc.add_argument("-l", "--level", type=int, default=6, help="Compression level")
 
@@ -245,13 +246,15 @@ def main():
                 comp_method = COMP_LZMA
             elif args.zlib:
                 comp_method = COMP_ZLIB
+            elif args.zstd:
+                comp_method = COMP_ZSTD
             elif args.no_compress:
                 comp_method = COMP_NONE
             else:
-                if zstd:
-                    comp_method = COMP_ZSTD
+                if lzma:
+                    comp_method = COMP_LZMA
                 else:
-                    print(Fore.YELLOW + "zstd not available, falling back to zlib")
+                    print(Fore.YELLOW + "lzma not available, update python, falling back to zlib")
                     comp_method = COMP_ZLIB
             output_file = args.output or (args.input + ".png")
             encode_file_to_png(args.input, output_file, comp_method, args.level)
@@ -275,4 +278,4 @@ def main():
         print(Fore.RED + f"Error: {e}")
 
 if __name__ == '__main__':
-    main()
+    main() ////TELL ME WHAT I CAN IMPROVE IN THIS CODE, INCLUDING FEATURES

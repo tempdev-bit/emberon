@@ -1,3 +1,24 @@
+Sample Test Document for Emberon v3 Encoding/Decoding
+
+This document contains a variety of text types and symbols to check the functionality.
+
+Symbols & Special Characters
+- © 2025 Solar.
+- ! @ # $ % ^ & * ( ) _ { } < > ~ ` ';
+- ¥, €, £, ₹
+- ≠, ≤, ≥, ∆, ∑
+- ⭕, ✨, 🌀, 🔒
+
+Multiple Languages
+- Hindi: नमस्ते, यह Emberon के लिए एक परीक्षण है। 🇮🇳
+- Chinese: 你好，这是一个用于Emberon的测试。🇨🇳
+- Japanese: こんにちは、これはEmberonのエンコードとデコードのテストです😊
+- Russian: Привет, это тест для Emberon. 🇷🇺
+
+Emojis:
+😎 👍 🚀 💥 🌍 🐱 🍕 🎮 🎶 💎 🎨 🧠 💡 📝 💻 🏆 🏅 🎉 🎯
+
+Lorem Ipsum: 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse condimentum, arcu molestie rutrum sodales, elit augue placerat sapien, vitae porta elit nunc non dui. Nullam varius elementum lectus eget congue. Vivamus cursus orci non purus congue, condimentum elementum nulla sodales. Proin ac efficitur ipsum. Fusce magna libero, gravida ut leo luctus, pretium interdum dui. Nam ultrices, felis ut posuere dignissim, ante tortor hendrerit urna, at cursus purus turpis vitae ante. Maecenas a euismod magna, eu pellentesque neque. Mauris consectetur molestie ipsum eu mollis. Duis hendrerit molestie metus. Sed a tellus nisl. Proin rutrum odio interdum nunc pretium congue. Nulla dapibus, massa ut sollicitudin ultricies, augue nunc congue felis, vel porta est nisi vitae mi.
 
 Mauris eget orci id risus egestas convallis et a purus. Nam tincidunt facilisis maximus. Sed congue eros magna, quis porta est maximus nec. Cras maximus rhoncus mattis. In hac habitasse platea dictumst. Nam eu consectetur neque, vitae luctus elit. Proin id libero in mauris tincidunt lobortis.
@@ -297,3 +318,4 @@ Nulla ultrices lorem vitae convallis laoreet. Maecenas vel ante est. Nullam in p
 Pellentesque rutrum nisl condimentum ipsum scelerisque vehicula. Nulla sit amet elit mauris. Nulla scelerisque mauris eget nulla pretium, quis luctus justo tempor. Nulla pharetra malesuada massa, ut tempus est cursus vitae. Curabitur vel urna eros. Quisque ac nisi metus. Aliquam in tempus nunc. Duis imperdiet placerat pharetra. Nulla rhoncus dignissim augue, et lacinia nunc efficitur in. Ut non tortor dictum, mattis lorem quis, ultrices dui. Duis nec sollicitudin metus. Sed a nulla ante. Curabitur sit amet erat sit amet ex ultrices aliquam. Morbi erat velit, fringilla volutpat convallis id, laoreet eget elit. Aliquam erat volutpat.
 
 In non blandit nulla, a cursus libero. Nunc velit orci, sodales ut velit eu, semper pharetra turpis. Sed eu molestie nunc. Aenean eleifend placerat ex gravida porttitor. Aliquam nec tristique felis. In in massa porta, ornare nisi vel, bibendum urna. Sed pulvinar nisl nec dui consectetur, sed aliquam ligula tincidunt. Donec ut metus ac quam facilisis egestas et sit amet nulla. In vitae magna quam. Morbi dapibus, ex et fermentum porttitor, metus turpis porttitor tortor, non ullamcorper ipsum odio in elit. Mauris sodales ipsum auctor quam aliquam porta. Phasellus luctus odio vel est semper, eu feugiat nibh viverra. Maecenas faucibus erat nisl. Phasellus tincidunt justo elit, eu pretium mi tincidunt et. Nullam feugiat odio egestas, rutrum nunc sit amet, lobortis ipsum. Suspendisse fermentum magna nec mi ultricies sagittis.
+
