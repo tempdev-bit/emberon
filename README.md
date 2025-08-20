@@ -23,17 +23,19 @@
  1. Zlib: 
  ✓ Encoded sample_document.txt -> example_zlib.png [80x79]
    Compression: zlib (orig **88.84** KB → comp **24.41** KB)
-
+   ![zlib_comp](example_zlib.png)
 
  2. Zstd:
  ✓ Encoded sample_document.txt -> example_zstd.png [79x79]
    Compression: zstd (orig **88.84** KB → comp **23.89** KB)
+   ![zstd_comp](example_zstd.png)
 
  3. Lzma:
  ✓ Encoded sample_document.txt -> example_lzma.png [75x75]
    Compression: lzma (orig **88.84** KB → comp **21.56** KB)
+   ![lzma_comp](example_lzma.png)
 
- These results speak for themselves, Lzma has the lowest post-compress file size</br>
+Lzma has the lowest post-compress file size</br>
 CURRENTLY LZMA IS OPTIONAL, USE --ZLIB, --ZSTD FOR THE OTHERS
 
 --- 
