@@ -4,24 +4,15 @@
 ![logo](logo.jpeg)
 
  It is a Python tool that lets you turn any binary file inside a PNG image in a fully lossless way — and later recover it perfectly.
- 
- TESTED WITH:- .txt, .zip, .AppImage (more will be done later)
- 
+
+(NOTE: If you are using [emberon-web](https://emberon.pages.dev), then only use ZLIB!)
+
  It packs your file’s bytes directly into pixels, optionally compresses them, and stores integrity information so decoding is safe.
  
   Great for:
  - Sharing binary data via image-friendly platforms.
  - Preserving files inside an a png (archive type)
  - Piracy.
- 
- FULL 150 PARAGRAPHS OF LOREM IPSUM LOOKS LIKE THIS: (original text and image is in repo)
- 
- Encoded lorem_ipsum.txt (90195 bytes) -> lorem_ipsum_encoded2.png (78x78, 6084 pixels).
- Compression: lzma level 9 (orig 90kb -> comp 21kb) bytes)
- 
- 
-![lorem_ipsum_1000_paragraphs](encoded.png)
-
 
 ---
 
@@ -30,20 +21,20 @@
  Here's all three compared for lorem_ipsum.txt (150 paargraphs) with MAX compression applied (lossless):
 
  1. Zlib: 
-   ✓ Encoded lorem_ipsum.txt -> encoded.png [79x78]
-   Compression: zlib (orig **88.08** KB → comp **23.57** KB)
+ ✓ Encoded sample_document.txt -> example_zlib.png [80x79]
+   Compression: zlib (orig **88.84** KB → comp **24.41** KB)
+
 
  2. Zstd:
-   ✓ Encoded lorem_ipsum.txt -> encoded.png [78x77]
-   Compression: zstd (orig **88.08** KB → comp **23.12** KB)
+ ✓ Encoded sample_document.txt -> example_zstd.png [79x79]
+   Compression: zstd (orig **88.84** KB → comp **23.89** KB)
 
  3. Lzma:
-   ✓ Encoded lorem_ipsum.txt -> encoded.png [74x74]
-   Compression: lzma (orig **88.08** KB → comp **21.09** KB)
+ ✓ Encoded sample_document.txt -> example_lzma.png [75x75]
+   Compression: lzma (orig **88.84** KB → comp **21.56** KB)
 
  These results speak for themselves, Lzma has the lowest post-compress file size</br>
- BUT, CURRENTLY zstd is the default while both zlib and lzma anre optional by passing the "--zlib" and "--lzma" tags respectively.
- I will be deciding the final compression library for v3 in a few days.
+CURRENTLY LZMA IS OPTIONAL, USE --ZLIB, --ZSTD FOR THE OTHERS
 
 --- 
 
@@ -54,7 +45,7 @@
 
  3. Piracy.
 
- ~~(Please avoid using this until v3, it's going to finalize the header structure.)~~ v2.5 has MAINLY finalized the header structure
+ ~~(Please avoid using this until v3, it's going to finalize the header structure.)~~ v2.5 has finalized the header structure, i.e. ***v2.5 and onwards will probably have no breaking changes***
 
 ---
 
@@ -99,12 +90,13 @@
 
   ```py
    #Encode lorem_ipsum.txt into a .png with name encoded.png
-   python emberon.py e lorem_ipsum.txt -o encoded.png
+   python3 emberon.py e example.txt -o example.png
+
   ```
 
   Decoding ->
   ```py
-   #Decode encoded .png into a .txt with name lorem_ipsum_text.txt
+   #Decode encoded.png into a .txt with name lorem_ipsum_text.txt
    python emberon.py d encoded.png -o lorem_ipsum_text.txt
   ```
   
@@ -124,6 +116,9 @@
    ```py
     python3 emberon.py inspect <encoded_file>.png
   ```
+  ####Different compression models
+   **use --lzma, --zlib, --zstd for models & -l or --level for setting the level of compression.**
+
   ### flags. 🫥
    #### -l or --level
    Used to set the level for compression algorithm (scale 0-9) (default:9)</br>
@@ -131,7 +126,7 @@
    USE LEVEL 9 FOR OPTIMIZATION'S SAKE
 
    #### --no-compress
-   avoids compression entirely (why would you want to use this tbh)
+   avoids compression entirely (don't 'use this, all compression happening is LOSSLESS)
    (note: setting --level 0 is practically the same as --no-compress, zlib doesn't compress data at level 0 BUT the zlib header/structure will be around the data.)
  
 ---
@@ -188,12 +183,12 @@
 ---
 
 ## What's New in Emberon v2 🎉
-- **Streaming encode/decode** — handles very large files without loading them fully into RAM.  
-- **PNG mode validation** — ensures you only decode supported RGBA PNGs.  
-- **Progress bars** — visible encoding/decoding progress for large files.  
-- **Colored CLI output** — errors, warnings, and success messages are now color-coded.  
-- **Human-readable sizes** — file sizes shown DYNAMICALLY in KB, MB, GB instead of raw bytes.  
-- **Pretty header inspection** — new `inspect` command to view header metadata without decoding.  
+- **Streaming encode/decode** — handles very large files without loading them fully into RAM. 
+- **PNG mode validation** — ensures you only decode supported RGBA PNGs. 
+- **Progress bars** — visible encoding/decoding progress for large files. 
+- **Colored CLI output** — errors, warnings, and success messages are now color-coded. 
+- **Human-readable sizes** — file sizes shown DYNAMICALLY in KB, MB, GB instead of raw bytes. 
+- **Pretty header inspection** — new `inspect` command to view header metadata without decoding. 
 
 ---
 
