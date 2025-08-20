@@ -20,18 +20,18 @@
  Emberon provides three different compression algorithms. (zlib, zstd, lzma)</br>
  Here's all three compared for lorem_ipsum.txt (150 paargraphs) with MAX compression applied (lossless):
 
- 1. Zlib: 
- ✓ Encoded sample_document.txt -> example_zlib.png [80x79]
+ 1. Zlib: </br>
+ ✓ Encoded sample_document.txt -> example_zlib.png [80x79]</br>
    Compression: zlib (orig **88.84** KB → comp **24.41** KB)</br>
    ![zlib_comp](example_zlib.png)
 
- 2. Zstd:
- ✓ Encoded sample_document.txt -> example_zstd.png [79x79]
+ 2. Zstd:</br>
+ ✓ Encoded sample_document.txt -> example_zstd.png [79x79]</br>
    Compression: zstd (orig **88.84** KB → comp **23.89** KB)</br>
    ![zstd_comp](example_zstd.png)
 
- 3. Lzma:
- ✓ Encoded sample_document.txt -> example_lzma.png [75x75]
+ 3. Lzma:</br>
+ ✓ Encoded sample_document.txt -> example_lzma.png [75x75]</br>
    Compression: lzma (orig **88.84** KB → comp **21.56** KB)</br>
    ![lzma_comp](example_lzma.png)
 
