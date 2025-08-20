@@ -5,11 +5,13 @@
 
 import argparse
 import math
+import subprocess
 import os
 import struct
 import hashlib
 import zlib
 import lzma
+import time
 from PIL import Image
 from tqdm import tqdm
 from colorama import Fore, Style, init as colorama_init
@@ -35,10 +37,10 @@ COMP_ZSTD = 2
 COMP_LZMA = 3
 
 HEADER_RESERVED_BYTE = 0
-BYTES_PER_PIXEL = 4
+BYTES_PER_PIXEL = 3
 
-CHUNK_ENCODE_SIZE = 128 * 1024 * 1024
-CHUNK_DECODE_SIZE = 64 * 1024 * 1024
+CHUNK_ENCODE_SIZE = 16 * 1024 * 1024
+CHUNK_DECODE_SIZE = 32 * 1024 * 1024
 
 # Compression registry
 COMPRESSORS = {
@@ -131,6 +133,108 @@ def parse_header(raw: bytes):
         "digest": digest
     }
 
+# ========== CORE ==========
+def choose_dimensions(num_pixels: int):
+    w = int(math.ceil(math.sqrt(num_pixels)))
+    h = int(math.ceil(num_pixels / w))
+    return w, h
+
+def encode_file_to_png_chunked(in_path: str, out_path: str, comp_method: int, compress_level: int):
+    file_size = os.path.getsize(in_path)
+
+    comp_name = COMPRESSORS[comp_method]["name"]
+    print(Fore.YELLOW + f"Encoding '{in_path}' with {comp_name}...")
+
+    # Prepare compressor for streaming
+    if comp_method == COMP_ZLIB:
+        comp_obj = zlib.compressobj(level=compress_level)
+    elif comp_method == COMP_LZMA:
+        comp_obj = lzma.LZMACompressor(preset=compress_level)
+    elif comp_method == COMP_ZSTD and zstd:
+        comp_obj = zstd.ZstdCompressor(level=compress_level).compressobj()
+    else:
+        comp_obj = None  # COMP_NONE
+
+    comp_chunks = []
+    with open(in_path, 'rb') as f:
+        for chunk in tqdm(iter(lambda: f.read(CHUNK_ENCODE_SIZE), b''), total=(file_size + CHUNK_ENCODE_SIZE - 1)//CHUNK_ENCODE_SIZE, desc="Compressing"):
+            if comp_obj:
+                comp_chunks.append(comp_obj.compress(chunk))
+            else:
+                comp_chunks.append(chunk)
+    if comp_obj:
+        comp_chunks.append(comp_obj.flush())
+    comp_bytes = b''.join(comp_chunks)
+
+    header = calc_header(file_size, comp_bytes, in_path, comp_method)
+    payload = header + comp_bytes
+
+    # Pad to BYTES_PER_PIXEL
+    pad_len = (-len(payload)) % BYTES_PER_PIXEL
+    if pad_len:
+        payload += b'\x00' * pad_len
+
+    # Image dimensions
+    num_pixels = len(payload) // BYTES_PER_PIXEL
+    width, height = choose_dimensions(num_pixels)
+    total_pixels = width * height
+    extra_pixels = total_pixels - num_pixels
+    if extra_pixels:
+        payload += b'\x00' * (extra_pixels * BYTES_PER_PIXEL)
+
+    img = Image.frombytes('RGB', (width, height), payload)
+    img.save(out_path, format='PNG', optimize=True, compress_level=9)
+
+    print(Fore.GREEN + f"✓ Encoded '{in_path}' -> '{out_path}' [{width}x{height}]")
+    print(Fore.YELLOW + f"   Compression: {comp_name} "
+                        f"(orig {pretty_size(file_size)} → comp {pretty_size(len(comp_bytes))})")
+
+
+def decode_png_to_file_chunked(in_path: str, out_path: str = None):
+    img = Image.open(in_path)
+    if img.mode != 'RGB':
+        raise RuntimeError(f"Unsupported PNG mode: {img.mode}, expected RGB")
+
+    raw = img.tobytes("raw", "RGB")
+    header_data = parse_header(raw)
+
+    if header_data["magic"] != MAGIC:
+        raise RuntimeError("File is not a valid Emberon PNG")
+
+    comp_start = HEADER_PAD_TO
+    comp_end = comp_start + header_data["comp_size"]
+    comp_bytes = raw[comp_start:comp_end]
+
+    if not out_path:
+        out_path = f"{header_data['name']}.{header_data['ext']}" if header_data["ext"] else header_data["name"]
+
+    dec_method = header_data["comp_method"]
+    dec_name = COMPRESSORS[dec_method]["name"]
+    print(Fore.YELLOW + f"Decoding '{in_path}' using {dec_name}...")
+
+    # Prepare decompressor for streaming
+    if dec_method == COMP_ZLIB:
+        dec_obj = zlib.decompressobj()
+    elif dec_method == COMP_LZMA:
+        dec_obj = lzma.LZMADecompressor()
+    elif dec_method == COMP_ZSTD and zstd:
+        dec_obj = zstd.ZstdDecompressor().decompressobj()
+    else:
+        dec_obj = None  # COMP_NONE
+
+    with open(out_path, 'wb') as f:
+        for i in tqdm(range(0, len(comp_bytes), CHUNK_DECODE_SIZE), desc="Decompressing"):
+            chunk = comp_bytes[i:i+CHUNK_DECODE_SIZE]
+            if dec_obj:
+                f.write(dec_obj.decompress(chunk))
+            else:
+                f.write(chunk)
+        # flush final bytes for streaming compressors
+        if dec_obj and hasattr(dec_obj, "flush"):
+            f.write(dec_obj.flush())
+
+    print(Fore.GREEN + f"✓ Decoded '{in_path}' -> '{out_path}' ({pretty_size(header_data['orig_size'])})")
+
 def print_header_info(h):
     print(Fore.CYAN + "[Header Information]")
     print(f" Magic: {h['magic']}")
@@ -140,77 +244,6 @@ def print_header_info(h):
     print(f" Original filename and extension: {h['name']}.{h['ext']}")
     print(f" SHA-256: {h['digest'].hex()}")
     print(f" Reserved: {h['reserved']}")
-
-# ========== CORE ==========
-def choose_dimensions(num_pixels: int):
-    w = int(math.ceil(math.sqrt(num_pixels)))
-    h = int(math.ceil(num_pixels / w))
-    return w, h
-
-def encode_file_to_png(in_path: str, out_path: str, comp_method: int, compress_level: int):
-    with open(in_path, 'rb') as f:
-        raw_data = f.read()
-
-    comp_func = COMPRESSORS[comp_method]["compress"]
-    comp_bytes = comp_func(raw_data, compress_level)
-
-    header = calc_header(len(raw_data), comp_bytes, filename=in_path, comp_method=comp_method)
-    payload = header + comp_bytes
-
-    pad_len = (-len(payload)) % BYTES_PER_PIXEL
-    if pad_len:
-        payload += b'\x00' * pad_len
-
-    num_pixels = len(payload) // BYTES_PER_PIXEL
-    width, height = choose_dimensions(num_pixels)
-    total_pixels = width * height
-    extra_pixels = total_pixels - num_pixels
-    if extra_pixels:
-        payload += b'\x00' * (extra_pixels * BYTES_PER_PIXEL)
-
-    img = Image.frombytes('RGBA', (width, height), payload)
-    img.save(out_path, format='PNG', optimize=False)
-
-    print(Fore.GREEN + f"✓ Encoded {in_path} -> {out_path} [{width}x{height}]")
-    print(Fore.YELLOW + f"   Compression: {COMPRESSORS[comp_method]['name']} "
-                        f"(orig {pretty_size(len(raw_data))} → comp {pretty_size(len(comp_bytes))})")
-
-def decode_png_to_file(in_path: str, out_path: str = None):
-    img = Image.open(in_path)
-    if img.mode != 'RGBA':
-        raise RuntimeError(f"Unsupported PNG mode: {img.mode}, expected RGBA")
-
-    raw = img.tobytes("raw", "RGBA")
-    header_data = parse_header(raw)
-
-    if header_data["magic"] != MAGIC:
-        raise RuntimeError("File is not a valid Emberon PNG")
-
-    comp_start = HEADER_PAD_TO
-    comp_end = comp_start + header_data["comp_size"]
-    if comp_end > len(raw):
-        raise RuntimeError("image does not contain full compressed payload (truncated?)")
-
-    comp_bytes = raw[comp_start:comp_end]
-
-    sha = hashlib.sha256()
-    sha.update(f"{header_data['orig_size']}:".encode())
-    sha.update(comp_bytes)
-    if sha.digest() != header_data["digest"]:
-        raise RuntimeError("SHA-256 mismatch: data corrupted or wrong image")
-
-    if not out_path:
-        out_path = f"{header_data['name']}.{header_data['ext']}" if header_data["ext"] else header_data["name"]
-
-    if header_data["comp_method"] not in COMPRESSORS:
-        raise RuntimeError(f"Unsupported compression method {header_data['comp_method']}")
-
-    dec_func = COMPRESSORS[header_data["comp_method"]]["decompress"]
-    with open(out_path, 'wb') as f_out:
-        data = dec_func(comp_bytes)
-        f_out.write(data)
-
-    print(Fore.GREEN + f"✓ Decoded {in_path} -> {out_path} ({pretty_size(header_data['orig_size'])})")
 
 # ========== CLI ==========
 def main():
@@ -247,30 +280,29 @@ def main():
             elif args.zlib:
                 comp_method = COMP_ZLIB
             elif args.zstd:
+                if zstd is None:
+                    raise SystemExit(Fore.RED + "zstd requested but zstandard module not installed")
                 comp_method = COMP_ZSTD
+
             elif args.no_compress:
                 comp_method = COMP_NONE
             else:
-                if lzma:
-                    comp_method = COMP_LZMA
-                else:
-                    print(Fore.YELLOW + "lzma not available, update python, falling back to zlib")
-                    comp_method = COMP_ZLIB
+                comp_method = COMP_ZLIB
             output_file = args.output or (args.input + ".png")
-            encode_file_to_png(args.input, output_file, comp_method, args.level)
+            encode_file_to_png_chunked(args.input, output_file, comp_method, args.level)
 
         elif args.cmd == "d":
             if not os.path.isfile(args.input):
                 raise SystemExit(Fore.RED + "Input file not found")
-            decode_png_to_file(args.input, args.output)
+            decode_png_to_file_chunked(args.input, args.output)
 
         elif args.cmd == "i":
             if not os.path.isfile(args.input):
                 raise SystemExit(Fore.RED + "Input file not found")
             img = Image.open(args.input)
-            if img.mode != 'RGBA':
+            if img.mode != 'RGB':
                 raise SystemExit(Fore.RED + f"Unsupported PNG mode: {img.mode}")
-            raw = img.tobytes("raw", "RGBA")
+            raw = img.tobytes("raw", "RGB")
             h = parse_header(raw)
             print_header_info(h)
 
